@@ -377,7 +377,7 @@
       var lean = mine - others * 0.8;
       if (good) return lean + zoneValue(st, zid) * 0.1;
       if (bad) return -lean + zoneValue(st, zid) * 0.1;
-      return Math.random() * 0.5;
+      return this.rng() * 0.5;
     }
     if (ctx === 'peek') return zoneValue(st, zid);
     return zoneValue(st, zid);
