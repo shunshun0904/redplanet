@@ -487,6 +487,11 @@ html, body {
 
 .rules-body { font-size: 12.5px; line-height: 1.75; color: #ddd2bd; }
 .rules-body ol, .rules-body p { margin: 6px 0; }
+.rules-body .note {
+  border-left: 3px solid var(--brass);
+  background: rgba(217, 164, 65, .08);
+  padding: 8px 12px; border-radius: 0 8px 8px 0; margin: 10px 0;
+}
 .rules-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }
 .rules-table td { padding: 4px 6px; border-bottom: 1px solid rgba(217, 164, 65, .16); vertical-align: top; }
 .rt-n { color: var(--rust); font-weight: 700; width: 22px; }
