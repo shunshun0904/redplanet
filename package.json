@@ -1,0 +1,11 @@
+{
+  "name": "redplanet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ボードゲーム「ミッション・レッドプラネット」のブラウザ版（非公式ファンメイド）",
+  "scripts": {
+    "bench": "node bench/run.js",
+    "bench:seats": "node bench/run.js --lineup ai,ai,ai,ai --games 400"
+  },
+  "license": "MIT"
+}
