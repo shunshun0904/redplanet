@@ -95,32 +95,51 @@ html, body {
 
 /* ==================== レイアウト ==================== */
 
-#main { flex: 1 1 auto; display: flex; min-height: 0; }
+/* 盤面と操作盤の 2 列。下に帯を敷かない（＝二層にしない）ので、
+   火星は縦いっぱいを使え、スクロールする場所も操作盤の1か所だけになる。 */
+#main {
+  flex: 1 1 auto; min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 372px;
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    "board prompt"
+    "board panel";
+  gap: 8px; padding: 8px;
+}
+@media (min-width: 1500px) {
+  #main { grid-template-columns: minmax(0, 1fr) 424px; }
+}
 
 #boardWrap {
-  flex: 1 1 auto; min-width: 0; position: relative;
-  display: grid; place-items: center; padding: 6px;
+  grid-area: board; min-width: 0; position: relative;
+  display: grid; place-items: center;
 }
 #board { width: 100%; height: 100%; max-height: 100%; }
 
-#side {
-  flex: 0 0 300px; display: flex; flex-direction: column; gap: 8px;
-  padding: 8px 8px 8px 0; min-height: 0; overflow-y: auto;
+#panel {
+  grid-area: panel; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px;
+  padding-right: 2px;
 }
 
-.panel {
+.block, .panel {
   background: var(--panel);
   border: 1px solid var(--panel-brd);
   border-radius: var(--radius);
   padding: 8px;
+  flex: 0 0 auto;
 }
-.panel-title {
-  font-family: var(--serif); font-size: 12px; letter-spacing: .1em;
+.block-t {
+  font-family: var(--serif); font-size: 11.5px; letter-spacing: .1em;
   color: var(--brass); margin-bottom: 6px;
 }
-.memorial, #players { flex: 0 0 auto; }
-.logpanel { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 130px; }
-#log { overflow-y: auto; flex: 1 1 auto; font-size: 12px; line-height: 1.5; padding-right: 4px; }
+.block-t .dim { color: var(--muted); font-size: 10px; letter-spacing: 0; }
+.logpanel { display: flex; flex-direction: column; }
+#log {
+  overflow-y: auto; max-height: 30vh; min-height: 92px;
+  font-size: 12px; line-height: 1.5; padding-right: 4px;
+}
 .logline { padding: 2px 0; border-bottom: 1px dotted rgba(217, 164, 65, .12); color: #cfc4ae; }
 .logline.sys { color: var(--brass); }
 .logline.char { color: #ffe0a8; font-weight: 600; }
@@ -134,6 +153,7 @@ html, body {
 /* ==================== プレイヤーカード ==================== */
 
 #players { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+@media (min-width: 1500px) { #players { display: grid; grid-template-columns: 1fr 1fr; } }
 .pcard {
   border-left: 4px solid var(--pc);
   background: rgba(255, 255, 255, .035);
@@ -223,32 +243,25 @@ html, body {
 .astro { stroke-width: 2; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .6)); }
 .more { fill: #f0e3c6; font-size: 13px; font-weight: 700; }
 
-/* ==================== フッター（発射台・手札） ==================== */
+/* ==================== 発射台・手札 ==================== */
 
-#bottom {
-  flex: 0 0 auto;
-  border-top: 1px solid var(--panel-brd);
-  background: linear-gradient(180deg, rgba(20, 15, 24, .8), rgba(12, 9, 16, .95));
-  padding: 6px 12px 8px;
-  display: flex; flex-direction: column; gap: 6px;
+.launchpad, .flight {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 6px; align-items: stretch;
 }
-.pad-label { font-size: 10.5px; letter-spacing: .12em; color: var(--brass-dim); }
-
-#padwrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.launchpad, .flight { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+.flight { margin-top: 6px; }
 .flight-label {
-  align-self: center; font-size: 10.5px; color: #8fd6f2;
-  writing-mode: vertical-rl; letter-spacing: .1em;
+  grid-column: 1 / -1; font-size: 10.5px; color: #8fd6f2; letter-spacing: .1em;
 }
 .dock { display: flex; }
 .dock-empty {
-  width: 108px; min-height: 74px; border-radius: 10px;
+  width: 100%; min-height: 74px; border-radius: 10px;
   border: 1px dashed rgba(217, 164, 65, .25);
   display: grid; place-items: center; font-size: 11px; color: rgba(217, 164, 65, .4);
 }
 
 .ship {
-  width: 108px; border-radius: 10px; padding: 5px 6px;
+  width: 100%; border-radius: 10px; padding: 5px 6px;
   background: linear-gradient(180deg, #241a2c, #16101c);
   border: 1px solid rgba(217, 164, 65, .35);
   box-shadow: 0 3px 10px rgba(0, 0, 0, .45);
@@ -301,10 +314,9 @@ html, body {
 }
 
 /* --- 手札 --- */
-#handwrap { display: flex; flex-direction: column; gap: 4px; }
-.hand { display: flex; gap: 6px; flex-wrap: wrap; }
+.hand { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 5px; }
 .hcard {
-  width: 80px; padding: 5px 3px; border-radius: 9px; text-align: center;
+  width: 100%; padding: 5px 3px; border-radius: 9px; text-align: center;
   background: linear-gradient(170deg, #f5ead2, #d9c9a5);
   color: #2a1a10;
   border: 1px solid #8a6b32;
@@ -334,19 +346,21 @@ html, body {
 .hcard.selectable { cursor: pointer; }
 .hcard.selectable:hover { transform: translateY(-7px) scale(1.05); box-shadow: 0 8px 20px rgba(0, 0, 0, .6); }
 
-/* --- プロンプトバー --- */
+/* --- プロンプトバー（操作盤の外・最上段に固定） --- */
 .promptbar {
-  display: none; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 7px 10px; border-radius: 10px;
-  background: linear-gradient(90deg, rgba(217, 164, 65, .18), rgba(224, 101, 58, .1));
-  border: 1px solid rgba(217, 164, 65, .5);
+  grid-area: prompt;
+  display: none; flex-direction: column; gap: 6px;
+  padding: 8px 10px; border-radius: 10px;
+  background: linear-gradient(160deg, rgba(217, 164, 65, .22), rgba(224, 101, 58, .12));
+  border: 1px solid rgba(217, 164, 65, .55);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .45);
   animation: promptIn .25s ease-out;
 }
 .promptbar.active { display: flex; }
 @keyframes promptIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.prompt-text { font-weight: 700; color: #ffe9b0; font-size: 13px; }
-.prompt-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; align-items: center; }
-.prompt-hint { font-size: 12px; color: var(--parch); opacity: .85; }
+.prompt-text { font-weight: 700; color: #ffe9b0; font-size: 13px; line-height: 1.45; }
+.prompt-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.prompt-hint { font-size: 12px; color: var(--parch); opacity: .85; margin-right: auto; }
 
 .pbtn {
   font: inherit; font-size: 12px; padding: 6px 12px; border-radius: 8px;
@@ -514,30 +528,34 @@ html, body {
 
 /* ==================== レスポンシブ ==================== */
 
+/* 狭い画面では 1 列。固定の帯は置かず、ページのスクロールは 1 つだけにする。
+   操作の指示だけは上端に貼りついて、盤面を見ているあいだも消えない。 */
 @media (max-width: 1000px) {
-  html, body { overflow: auto; font-size: 13px; }
+  /* body に height:100% と overflow を残すと body 自体が入れ子のスクロール枠になり、
+     ページのスクロールが二重になる。狭い画面では普通の文書スクロール1本に戻す。 */
+  html, body { height: auto; min-height: 100%; overflow: visible; font-size: 13px; }
   #app { height: auto; min-height: 100%; }
-  #main { flex-direction: column; padding-bottom: 264px; }
-  #boardWrap { height: 76vw; min-height: 360px; }
-  #side { flex: 1 1 auto; padding: 8px; }
-  #players { flex-direction: row; flex-wrap: wrap; overflow: visible; }
-  .pcard { flex: 1 1 150px; }
-  .logpanel { max-height: 200px; }
-  #bottom {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-    background: linear-gradient(180deg, #191322, #0a0810);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, .75);
-    max-height: 262px; overflow-y: auto;
+  #main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas: "prompt" "board" "panel";
+    padding: 8px; gap: 8px;
   }
+  #boardWrap { height: 80vw; max-height: 62vh; min-height: 320px; }
+  #panel { overflow: visible; }
+  #promptBar {
+    position: sticky; top: 0; z-index: 30;
+    background: linear-gradient(160deg, #4a3a1c, #3a2416);
+    border-color: var(--brass);
+  }
+  #players { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  #log { max-height: 40vh; }
   .track .pip { width: 20px; height: 20px; font-size: 10px; }
-  .promptbar { position: sticky; top: 0; z-index: 2; }
 }
 @media (max-width: 620px) {
   .brand-text { display: none; }
-  .hcard { width: 70px; }
-  .ship, .dock-empty { width: 100px; }
   .tools .tool { padding: 5px 7px; }
-  #boardWrap { min-height: 430px; }
+  #boardWrap { min-height: 400px; }
   /* SVG は viewBox で縮むため、小画面では文字を大きめに指定する */
   .zone-label { font-size: 27px; stroke-width: 4px; }
   .zone.phobos .zone-label { font-size: 24px; }

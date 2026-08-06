@@ -75,28 +75,29 @@
            aria-label="火星の地図"></svg>
     </section>
 
-    <aside id="side">
-      <div id="players" class="panel"></div>
-      <div id="memorial" class="memorial"></div>
-      <div class="panel logpanel">
-        <div class="panel-title">航海日誌</div>
-        <div id="log"></div>
-      </div>
-    </aside>
-  </div>
-
-  <footer id="bottom">
     <div id="promptBar" class="promptbar"></div>
-    <div id="padwrap">
-      <div class="pad-label">発射台</div>
-      <div id="launchpad" class="launchpad"></div>
-      <div id="flight" class="flight"></div>
+
+    <div id="panel">
+      <section class="block">
+        <div class="block-t">あなたの手札 <span class="dim">使用済みはリクルーターで戻る</span></div>
+        <div id="hand" class="hand"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-t">発射台</div>
+        <div id="launchpad" class="launchpad"></div>
+        <div id="flight" class="flight"></div>
+      </section>
+
+      <div id="players"></div>
+      <div id="memorial" class="memorial"></div>
+
+      <section class="block logpanel">
+        <div class="block-t">航海日誌</div>
+        <div id="log"></div>
+      </section>
     </div>
-    <div id="handwrap">
-      <div class="pad-label">あなたの手札（使用済みはリクルーターで戻る）</div>
-      <div id="hand" class="hand"></div>
-    </div>
-  </footer>
+  </div>
 </div>
 
 <div id="fxLayer" aria-hidden="true"></div>

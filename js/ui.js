@@ -22,7 +22,7 @@
   UI.prototype.mount = function () {
     var d = this.dom;
     ['track', 'board', 'players', 'log', 'launchpad', 'flight', 'hand',
-      'promptBar', 'modal', 'fxLayer', 'stars', 'memorial'].forEach(function (id) {
+      'promptBar', 'modal', 'fxLayer', 'stars', 'memorial', 'panel'].forEach(function (id) {
         d[id] = document.getElementById(id);
       });
     this.stars = new FX.Starfield(d.stars);
@@ -387,11 +387,16 @@
 
   UI.prototype.render = function () {
     if (!this.game) return;
+    /* 各ブロックを組み直すと中身の高さが一瞬縮み、操作盤のスクロール位置が
+       先頭に戻ってしまう。相手の手番のたびに勝手に飛ばないよう覚えておく。 */
+    var panel = this.dom.panel;
+    var keep = panel ? panel.scrollTop : 0;
     this.renderTrack();
     this.renderBoard();
     this.renderPlayers();
     this.renderPad();
     this.renderHand();
+    if (panel && panel.scrollTop !== keep) panel.scrollTop = keep;
     if (this.pending) this.applyHighlight(this.pending.req);
   };
 
